@@ -32,22 +32,34 @@ from meeting
 WHERE meeting.date = args[0];
 
 
---Show which users have booked which meetings. 
-SELECT room.name, meeting.time, person.name
+
+
+--Show which user booked which meetings
+SELECT room.name, meeting.time, meeting.date, person.name
 FROM meeting
 JOIN person on meeting.booker = person.id
 JOIN room on meeting.room = room.id;
 
-
 --Show all participants of a given meeting.
-SELECT name
+--right now: show all participants of all meetings
+SELECT person.name, date, time, room.name
 FROM person
 JOIN attendant on person.id = attendant.person
 JOIN meeting on meeting.id = attendant.meeting
-WHERE meeting.date = args[0] AND meeting.time = args[1];
+JOIN room on meeting.room = room.id
+WHERE meeting.date >= '2017-01-01' AND meeting.date <= '2018-05-30'
+ORDER BY date ASC;
 
---Show cost accrued by teams for any given time interval.
+--Show cost accrued by teams for any given time interval. 
+-- could be obsolete to have a cost table, depends on how you wish to structure the database 
 SELECT sum(sum)
 FROM cost
 WHERE (cost.date >= args[0] AND cost.date <= args[1]) -- date falls in the given intervall
 GROUP BY team;
+
+--total cost accrued by every team
+SELECT person.team, SUM((meeting.duration-meeting.time)*room.cost)
+FROM meeting
+JOIN room on meeting.room = room.id
+JOIN person on meeting.booker = person.id
+GROUP BY person.team;

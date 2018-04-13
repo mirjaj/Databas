@@ -6,9 +6,9 @@ CREATE TABLE person (
   position VARCHAR(30)
 );
 
-DROP TABLE rooms;
-CREATE TABLE rooms (
-  id VARCHAR(30) PRIMARY KEY,
+DROP TABLE room;
+CREATE TABLE room (
+  id NUMERIC PRIMARY KEY,
   name VARCHAR(40),
   seats NUMERIC NOT NULL,
   cost NUMERIC NOT NULL, --hourly rate
@@ -17,12 +17,13 @@ CREATE TABLE rooms (
 );
 DROP TABLE meeting;
 CREATE TABLE meeting(
-  meeting_id NUMERIC PRIMARY KEY,
-  room_id VARCHAR(30),
+  id NUMERIC PRIMARY KEY,
+  room NUMERIC,
   booker NUMERIC NOT NULL,
-  date VARCHAR(15),
-  time VARCHAR(15),
-  duration NUMERIC
+  date DATE,
+  time NUMERIC,
+  duration NUMERIC,
+  UNIQUE(room, time)
 );
 DROP TABLE costs;
 CREATE TABLE costs(
